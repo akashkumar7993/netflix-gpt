@@ -1,10 +1,14 @@
 import React, { useRef, useState } from 'react'
 import Header from './Header';
 import { checkValidata } from"../utils/validate" ;
+import {createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../utils/firebase";
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => { 
   const [isSignInForm, setIsSignInForm] = useState(true);
   const [errorMessage, setErrorMessage] = useState(null);
+  const navigate = useNavigate();
 
 const email = useRef(null);
 const password = useRef(null);
@@ -13,7 +17,39 @@ const password = useRef(null);
     // validate the forn data
     const message = checkValidata (email.current.value, password.current.value);
     setErrorMessage(message);
-  }
+    if(message) return ;
+    if(!isSignInForm) {
+      // Sign in Logic
+      createUserWithEmailAndPassword(auth, email.current.value, password.current.value)
+    .then((userCredential) => {
+    // Signed up 
+    const user = userCredential.user;
+    navigate("/browse");
+  })
+    .catch((error) => {
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    setErrorMessage(errorCode + "-" + errorMessage);
+  });
+
+    }else {
+      //Sign up Logic
+      signInWithEmailAndPassword(auth, email.current.value, password.current.value)
+      .then((userCredential) => {
+    // Signed in 
+    const user = userCredential.user;
+   console.log(user);
+   navigate("/browse");
+  })
+    .catch((error) => {
+    const errorCode = error.code;
+    const errorMessage = error.message;
+
+     setErrorMessage(errorCode + "-" + errorMessage);
+  });
+
+    }
+  };
 
   const toggleSignInForm = () => {
     setIsSignInForm(!isSignInForm);
@@ -22,10 +58,10 @@ const password = useRef(null);
     <div>
       <Header/>
       <div className="absolute">
-        <img className="object-fit: cover" src='https://assets.nflxext.com/ffe/siteui/vlv3/93da5c27-be66-427c-8b72-5cb39d275279/94eb5ad7-10d8-4cca-bf45-ac52e0a052c0/IN-en-20240226-popsignuptwoweeks-perspective_alpha_website_large.jpg' />
+        <img className="object-fit: cover" alt='logo' src='https://assets.nflxext.com/ffe/siteui/vlv3/93da5c27-be66-427c-8b72-5cb39d275279/94eb5ad7-10d8-4cca-bf45-ac52e0a052c0/IN-en-20240226-popsignuptwoweeks-perspective_alpha_website_large.jpg' />
       </div>
       <div>
-        <from onSubmit={(e) => e.preventDefault()} className="absolute w-3/12 p-12 my-24 bg-black mx-auto right-0 left-0 rounded-lg bg-opacity-80">
+        <form onSubmit={(e) => e.preventDefault()} className="absolute w-3/12 p-12 my-24 bg-black mx-auto right-0 left-0 rounded-lg bg-opacity-80">
           <h1 className='text-white font-bold text-3xl my-5'>
             {isSignInForm ? "Sign In" : "Sing Up"}
           </h1>
@@ -40,7 +76,7 @@ const password = useRef(null);
           <p className='py-4 text-white cursor-pointer' onClick={toggleSignInForm}>
           {isSignInForm ? "New to Netflix? Sign Up Now" : "Allready registered? Sign in Now."}
           </p>
-        </from>
+        </form>
       </div>
     </div>
   ); 
