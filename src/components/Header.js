@@ -8,6 +8,7 @@ import { useEffect } from 'react';
 import { addUser, removeUser } from '../utils/userSlice';
 import { remove } from 'firebase/database';
 import { LOGO } from '../utils/constants';
+import { toggleGptSearchView } from '../utils/gptSlice';
 
 const Header = () => {
   const navigate = useNavigate();
@@ -37,6 +38,9 @@ const Header = () => {
     return () => unsubscribe();
    }, [])
   
+   const handleGptSearchClick =() =>{
+    dispatch(toggleGptSearchView());
+   };
 
   return (
     <div className='absolute w-screen px-10 bg-gradient-to-b from-black z-10 flex justify-between'>
@@ -45,10 +49,14 @@ const Header = () => {
       alt='logo'
       />
       {user && (<div className='flex p-2'>
+      <button className='py-2 px-4 m-4 bg-purple-800 text-white rounded-md'
+      onClick={handleGptSearchClick}
+      >
+        GPT Search</button>
         <img className='w-10 h-10 rounded-lg' alt='usericon' 
         src={user?.photoURL}
         />
-        <button onClick={handleSingOut} className='font-bold'>(Sing Out)</button>
+        < button onClick={handleSingOut} className='font-bold'>(Sing Out)</button>
       </div>)}
     </div>
   ); 
