@@ -23,3 +23,5 @@ export const SUPPORTED_LANGUAGES = [
 {identifier: "spanish", name: "Spanish"},
 {identifier: "bangla", name: "Bangla"},
 ];
+
+export const OPENAI_KEY ="sk-proj-o3thgWKDVoyUYIohc2jbT3BlbkFJAW0xXZxocx3STx4VKh80";
