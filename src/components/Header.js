@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { useEffect } from 'react';
 import { addUser, removeUser } from '../utils/userSlice';
-import { LOGO, SUPPORTED_LANGUAGES } from '../utils/constants';
+import { LOGO, SUPPORTED_LANGUAGES, USER_AVATAR } from '../utils/constants';
 import { toggleGptSearchView } from '../utils/gptSlice';
 import { changeLanguage } from '../utils/configSlice';
 
@@ -54,7 +54,7 @@ const Header = () => {
       alt='logo'
       />
       {user && (
-      <div className='flex p-2'>
+      <div className='flex p-2 justify-between'>
         {showGptSearch && (
         <select 
         className='p-2 m-4 bg-gray-900 text-white rounded-lg' onChange={handleLanguageChange}>
@@ -69,10 +69,11 @@ const Header = () => {
       > 
         {showGptSearch? "Hompage":"GPT Search"}
         </button>
-        <img className='w-10 h-10 rounded-lg' alt='usericon' 
-        src={user?.photoURL}
+        <img className='hidden md:block w-10 h-10 mt-4 rounded-lg' alt='usericon' 
+        // src={user?.photoURL}
+        src= {USER_AVATAR} 
         />
-        < button onClick={handleSingOut} className='font-bold text-white'>(Sing Out)</button>
+        < button onClick={handleSingOut} className='font-bold text-white ml-3'>(Sing Out)</button>
       </div>)}
     </div>
   ); 
